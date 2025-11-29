@@ -1,0 +1,31 @@
+//| mill-version: 1.1.0-RC2
+//| mill-jvm-version: temurin:17.0.6
+
+package build
+
+import mill.*, scalalib.*, scalajslib.*, scalajslib.api.*
+
+trait AppScalaModule extends ScalaModule {
+  def scalaVersion = "3.7.4"
+}
+
+trait AppScalaJSModule extends AppScalaModule, ScalaJSModule {
+  def scalaJSVersion = "1.20.1"
+  
+  def moduleKind = ModuleKind.ESModule
+
+  def scalaJSSourceMap = false
+}
+
+object `package` extends AppScalaModule {
+
+  object myorg extends AppScalaJSModule {
+    def moduleSplitStyle = ModuleSplitStyle.SmallModulesFor("livechart")
+
+    def mvnDeps = Seq(
+      mvn"org.scala-js::scalajs-dom::2.8.1",
+      mvn"io.indigoengine::tyrian::0.14.0",
+      mvn"io.indigoengine::tyrian-io::0.14.0"
+    )
+  }
+}
